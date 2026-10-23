@@ -1,0 +1,782 @@
+[
+  {
+    "id": "ADM-001",
+    "topic": "Security & access",
+    "prompt": "A sales user can open an Account but cannot see its Margin field. Another user with the same profile can see it. What should you inspect first?",
+    "choices": [
+      "Permission sets and permission set groups granting field access",
+      "The Account team's access level for the affected record",
+      "The profile's assigned Account page layout before considering permission sets",
+      "The user's territory membership and Account access"
+    ],
+    "explanation": "Field-level security can be extended through permission sets. Record sharing does not grant field access; page layouts alone are not a security boundary.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-002",
+    "topic": "Security & access",
+    "prompt": "Opportunity OWD is Private. A specialist needs ongoing access to selected deals without receiving access to all deals in a region. Which feature best fits?",
+    "choices": [
+      "Opportunity teams with appropriate record access",
+      "A criteria-based sharing rule covering every deal in the specialist's region",
+      "A role directly above all owners of the selected deals",
+      "View All on Opportunity paired with a filtered list view"
+    ],
+    "explanation": "Opportunity teams grant record-specific collaboration access without widening baseline access across unrelated opportunities.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-003",
+    "topic": "Security & access",
+    "prompt": "A custom object has Private OWD. Managers must not inherit access through the role hierarchy. What should an administrator configure?",
+    "choices": [
+      "Disable Grant Access Using Hierarchies for that custom object",
+      "Disable hierarchy inheritance on the managers' roles only",
+      "Replace Private OWD with Public Read Only and a restriction rule",
+      "Remove managers from the public groups used by sharing rules"
+    ],
+    "explanation": "Custom objects can disable hierarchy-based access. The same switch is not available for standard objects.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-004",
+    "topic": "Security & access",
+    "prompt": "A user can edit an Account but cannot edit its Annual Revenue field even after it is added to the layout. What is the next check?",
+    "choices": [
+      "Field-level edit permission and any other edit restrictions",
+      "The Account's sharing rule granting Read Only access",
+      "The Account owner's role relative to the user",
+      "The layout's section visibility before checking field permissions"
+    ],
+    "explanation": "Record edit access does not imply field edit access. A layout cannot override read-only field-level security.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-005",
+    "topic": "Security & access",
+    "prompt": "A permission set group grants Delete through one component. One team should receive the group without that permission. What supports this requirement?",
+    "choices": [
+      "A muting permission set in the group, provided no other source grants Delete",
+      "A restrictive sharing rule denying Delete to that team",
+      "A second permission set explicitly setting Delete to denied",
+      "Removing Delete from the profile while leaving all group grants intact"
+    ],
+    "explanation": "Muting removes selected grants from that group only. A separate profile or permission set can still grant the permission.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-006",
+    "topic": "Security & access",
+    "prompt": "A contractor needs access to ten Accounts for two weeks. The records do not share a reliable attribute. What minimizes broad access?",
+    "choices": [
+      "Manual sharing or Account team access to those records, followed by removal",
+      "A criteria-based rule using Account owner as a temporary proxy",
+      "A dedicated role above the ten Account owners",
+      "An Account list view shared with the contractor"
+    ],
+    "explanation": "Targeted sharing meets a limited record requirement. Time-bound cleanup must be planned; broad administrative permissions are unnecessary.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-007",
+    "topic": "Security & access",
+    "prompt": "A user receives record access through a sharing rule and a manual share. You delete the manual share. Why does access remain?",
+    "choices": [
+      "Sharing grants are additive; the rule still grants access",
+      "The user retains access until the record owner changes",
+      "Manual sharing removal requires a full sharing recalculation before taking effect",
+      "The rule cannot grant access unless a manual share also exists"
+    ],
+    "explanation": "Removing one access path does not remove access granted by another path. Inspect all effective grants.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-008",
+    "topic": "Security & access",
+    "prompt": "An integration should read one custom object and update two fields, with no administrative access. What is the best design?",
+    "choices": [
+      "A dedicated integration identity with minimum object and field permissions",
+      "A dedicated user with Modify All on the object and layout restrictions",
+      "A shared integration identity used by every external system",
+      "An employee identity with a permission set limited to the integration's fields"
+    ],
+    "explanation": "A dedicated least-privilege identity separates auditability and lifecycle from individual employees. UI layouts do not constrain API access.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-009",
+    "topic": "Security & access",
+    "prompt": "A user can access a record through a list view but cannot find it in a different app's navigation. What is most likely?",
+    "choices": [
+      "App navigation differs from record security",
+      "App assignment should be used to remove access to those records",
+      "Add the object to navigation to grant the missing object permission",
+      "Change OWD because list views provide an alternative sharing path"
+    ],
+    "explanation": "Navigation controls discoverability. Object, field, and record permissions determine access independently.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-010",
+    "topic": "Security & access",
+    "prompt": "A confidential field must be hidden from users in reports, API responses, and record pages. Which control is required?",
+    "choices": [
+      "Field-level security",
+      "A read-only field on all assigned page layouts",
+      "A custom report type excluding the field and a hidden Lightning component",
+      "A validation rule preventing nonadministrators from changing the field"
+    ],
+    "explanation": "Field-level security applies beyond a particular page. Layout and folder changes do not comprehensively protect the field.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "ADM-011",
+    "topic": "Object model & configuration",
+    "prompt": "Every Invoice Line must belong to an Invoice and inherit its owner and sharing. Invoice totals should summarize line amounts. Which relationship fits?",
+    "choices": [
+      "Master-detail with a roll-up summary on Invoice",
+      "A required lookup with a formula summing all related line amounts",
+      "A lookup with inherited parent sharing enabled in the field settings",
+      "A master-detail relationship with Invoice Line as the master"
+    ],
+    "explanation": "Master-detail provides dependent ownership and sharing and supports native roll-up summaries on the master.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-012",
+    "topic": "Object model & configuration",
+    "prompt": "A custom child record must survive deletion of its related parent. The relationship must be optional. What should you use?",
+    "choices": [
+      "A lookup with appropriate parent-deletion behavior",
+      "A master-detail relationship with cascade deletion disabled",
+      "A required lookup configured to prevent deletion of the parent",
+      "A master-detail relationship with reparenting enabled"
+    ],
+    "explanation": "An optional lookup can preserve independent child records. Confirm its deletion settings rather than assuming master-detail behavior.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-013",
+    "topic": "Object model & configuration",
+    "prompt": "Sales and Support need different picklist subsets and page layouts on the same object. What should you configure?",
+    "choices": [
+      "Record types and assigned page layouts",
+      "Separate page layouts that independently define permitted picklist values",
+      "Permission sets assigning different picklist subsets directly",
+      "Record types alone, without reviewing layout and process assignments"
+    ],
+    "explanation": "Record types support process and picklist variations with layout assignment. They do not independently grant record access.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-014",
+    "topic": "Object model & configuration",
+    "prompt": "An administrator needs an Account field to show the current owner's department automatically. No historical snapshot is required. What fits?",
+    "choices": [
+      "A cross-object formula where the relationship and field support it",
+      "A default-value formula on Account referencing the owner",
+      "A roll-up summary reading the owner's current department",
+      "A one-time before-save flow that copies the value only on Account creation"
+    ],
+    "explanation": "A formula reflects the referenced value dynamically. Defaults and copied values become stale without further updates.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-015",
+    "topic": "Object model & configuration",
+    "prompt": "A currency formula on Opportunity references the Account's risk category. A user lacks access to the source field. What risk must be evaluated?",
+    "choices": [
+      "The formula may expose information derived from a field the user cannot view",
+      "The source field's permissions always prevent the formula from evaluating",
+      "Restricting the related object's tab guarantees the formula is safe",
+      "Making the formula read-only prevents disclosure of the source value"
+    ],
+    "explanation": "Cross-object formulas can surface derived information. Protect the formula itself and assess sensitive data exposure.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-016",
+    "topic": "Object model & configuration",
+    "prompt": "A business wants a field required for API imports as well as interactive edits. Which approach best enforces a conditional requirement?",
+    "choices": [
+      "A validation rule evaluating the business condition",
+      "Mark the field required on each interactive page layout",
+      "Add a screen flow that checks the field before users save",
+      "Use a default value so API clients never need to supply the field"
+    ],
+    "explanation": "Validation rules enforce conditions during saves, including API operations, subject to explicitly designed exceptions.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-017",
+    "topic": "Object model & configuration",
+    "prompt": "An administrator changes a picklist label but integrations depend on the API value. What should be preserved?",
+    "choices": [
+      "The existing API value used by integrations",
+      "Change the API value with the label and let integrations match by display text",
+      "Preserve the label and change only the API value",
+      "Reorder the values so integrations continue using the same position"
+    ],
+    "explanation": "Labels and API values serve different purposes. Preserve stable integration values and test dependent automation.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-018",
+    "topic": "Object model & configuration",
+    "prompt": "Two objects need a many-to-many relationship with relationship-specific fields. What is the standard pattern?",
+    "choices": [
+      "A junction object connecting the two objects",
+      "Two direct lookup fields without an association record",
+      "One master-detail relationship with a multi-select picklist for the other side",
+      "A roll-up summary on each object holding the related record IDs"
+    ],
+    "explanation": "A junction object models each association as a record, allowing attributes and relationship constraints.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "ADM-019",
+    "topic": "Sales & marketing",
+    "prompt": "Marketing qualifies a Lead that represents a new contact at an existing Account. What should happen during conversion?",
+    "choices": [
+      "Select the existing Account and create or match the Contact as appropriate",
+      "Create a new Account, then merge it after every conversion",
+      "Convert into the existing Account but always create a new Contact",
+      "Update the Lead's Company field to the Account name to establish the relationship"
+    ],
+    "explanation": "Lead conversion can associate records with existing Accounts and Contacts. Matching and duplicate policies should be considered.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-020",
+    "topic": "Sales & marketing",
+    "prompt": "Managers need the stages available to differ between new-business and renewal Opportunities. What is needed?",
+    "choices": [
+      "Sales processes combined with Opportunity record types",
+      "Opportunity record types with page layouts, without separate sales processes",
+      "Separate page layouts that hide unwanted Stage values",
+      "A validation rule as the sole mechanism for providing different available stage lists"
+    ],
+    "explanation": "Sales processes select Opportunity stages; record types connect the process to the appropriate user experience.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-021",
+    "topic": "Sales & marketing",
+    "prompt": "A sales team must capture negotiated product quantities and prices on each deal. What should be configured?",
+    "choices": [
+      "Products, price books, and Opportunity products",
+      "Products and price books without adding line items to Opportunities",
+      "A custom quantity field on Opportunity for each active product",
+      "Quotes alone, without configuring products or price book entries"
+    ],
+    "explanation": "Opportunity products connect products and price book entries to a deal with quantities and negotiated pricing.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-022",
+    "topic": "Sales & marketing",
+    "prompt": "A Campaign must distinguish Invited, Attended, and No Show while tracking responses. What should you configure?",
+    "choices": [
+      "Campaign member statuses and which statuses count as responded",
+      "Lead status values synchronized to Campaign member status",
+      "One Campaign record type for each participation status",
+      "A formula on Campaign that derives responses from Lead conversion"
+    ],
+    "explanation": "Campaign member statuses represent participation and include response designation. They are distinct from Lead status.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-023",
+    "topic": "Sales & marketing",
+    "prompt": "A Lead assignment rule is configured, but imported Leads still belong to the importing user. What should you inspect?",
+    "choices": [
+      "Whether the import method invokes the active assignment rule",
+      "Whether the importing user's role is above the intended queue members",
+      "Whether the rule criteria match the final owner rather than Lead fields",
+      "Whether the destination queue has access to the related Campaign"
+    ],
+    "explanation": "Assignment rule execution depends on the operation and applicable options. Merely configuring a rule does not force every save to invoke it.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-024",
+    "topic": "Sales & marketing",
+    "prompt": "An Opportunity's stage has changed but the forecast view does not match expectations. Which mapping should you review?",
+    "choices": [
+      "The stage's forecast category and forecast configuration",
+      "The Opportunity probability without reviewing forecast categories",
+      "The owner's role alone, because stage mappings never affect forecasts",
+      "The Opportunity record type's page layout assignment"
+    ],
+    "explanation": "Opportunity stages map to forecast categories, and forecast configuration determines which information is included.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-025",
+    "topic": "Sales & marketing",
+    "prompt": "A sales manager wants a unified view of each salesperson's pipeline, with drill-down to deals. What is the best starting point?",
+    "choices": [
+      "An Opportunity report grouped by owner and stage with a dashboard",
+      "A dashboard with manually entered pipeline totals per salesperson",
+      "An Account report grouped by owner, using Account annual revenue as pipeline",
+      "An Opportunity list view without grouping or aggregate reporting"
+    ],
+    "explanation": "An appropriately secured Opportunity report and dashboard support pipeline aggregation and record-level investigation.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "ADM-026",
+    "topic": "Service & support",
+    "prompt": "Cases need to route to different queues based on product and severity when submitted. Which feature is the first fit?",
+    "choices": [
+      "Case assignment rules with ordered criteria",
+      "Case escalation rules with a zero-hour threshold for every new Case",
+      "Case auto-response rules that assign the destination queue",
+      "A support process that maps every status directly to an owner"
+    ],
+    "explanation": "Assignment rules route incoming Cases. Escalation rules address elapsed-time conditions after intake.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "ADM-027",
+    "topic": "Service & support",
+    "prompt": "Urgent Cases must notify management if unresolved after a defined business-hours interval. What should you configure?",
+    "choices": [
+      "Case escalation rules using the appropriate business hours",
+      "Case assignment rules with an age-based formula as the only mechanism",
+      "Auto-response rules using a delayed email template",
+      "An entitlement process without reviewing whether simple escalation rules meet the need"
+    ],
+    "explanation": "Escalation rules evaluate age and criteria and can reassign or notify, with business hours affecting timing.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "ADM-028",
+    "topic": "Service & support",
+    "prompt": "Customers should receive different acknowledgments depending on the submitted Case type. What feature fits?",
+    "choices": [
+      "Case auto-response rules",
+      "A single organization-wide email signature for all Case submissions",
+      "Case assignment rule entries with an email template but no response rules",
+      "Case escalation rules that send the initial acknowledgment on creation"
+    ],
+    "explanation": "Auto-response rules send template-based acknowledgments based on criteria. Routing and escalation solve different needs.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "ADM-029",
+    "topic": "Service & support",
+    "prompt": "Agents need consistent guided steps to gather information and create a Case while on a call. What should be considered?",
+    "choices": [
+      "A screen flow exposed in the service experience",
+      "An autolaunched flow containing screen elements",
+      "A record-triggered flow that prompts the agent during the transaction",
+      "A validation rule guiding the agent through a sequence of dependent inputs"
+    ],
+    "explanation": "Screen flows support guided input and record actions. Before-save flows do not present screens.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "ADM-030",
+    "topic": "Service & support",
+    "prompt": "Only approved support articles should be available to external readers. What must be evaluated together?",
+    "choices": [
+      "Knowledge publication state, channel visibility, and audience access",
+      "Publication state alone, because published articles are visible to all audiences",
+      "Data categories alone, without channel or user access checks",
+      "Report folder access and Knowledge record ownership only"
+    ],
+    "explanation": "Publishing alone does not establish the intended audience. Channel and access configuration determine exposure.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "ADM-031",
+    "topic": "Data management",
+    "prompt": "A nightly import must update existing customer records and insert new ones without relying on Salesforce IDs. What should be used?",
+    "choices": [
+      "Upsert using a properly governed external ID",
+      "Update by Account name after sorting the CSV",
+      "Insert using an external ID field without using an upsert operation",
+      "Upsert using a customer identifier that is allowed to repeat across source systems"
+    ],
+    "explanation": "Upsert uses the external ID to identify existing records. Uniqueness and source identity governance prevent ambiguous matches.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-032",
+    "topic": "Data management",
+    "prompt": "An import may create Accounts with names similar to existing customers. The business wants warnings or blocks based on matching criteria. What is required?",
+    "choices": [
+      "Matching rules together with duplicate rules",
+      "A matching rule alone, without an active duplicate rule",
+      "A duplicate rule without defining or selecting matching logic",
+      "A unique text field using only the customer's displayed name"
+    ],
+    "explanation": "Matching rules identify possible matches; duplicate rules decide what happens when those matches are found.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-033",
+    "topic": "Data management",
+    "prompt": "A large update succeeds for some rows and fails validation for others. What is the safest next step?",
+    "choices": [
+      "Review success and error outputs and retry only corrected failures",
+      "Retry the full file using Insert after removing the error column",
+      "Disable the failing rules and rerun every row without reconciliation",
+      "Assume the whole batch rolled back and repeat all operations"
+    ],
+    "explanation": "Partial results require reconciliation. Retrying only failures avoids duplicate creation or unintended repeated side effects.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-034",
+    "topic": "Data management",
+    "prompt": "Before bulk-changing record owners, what should an administrator do?",
+    "choices": [
+      "Export relevant IDs and current owners and assess sharing and automation impacts",
+      "Export record names and new owner names without IDs",
+      "Change owners first and use a report afterward to reconstruct prior access",
+      "Disable sharing rules during the transfer and restore them without testing"
+    ],
+    "explanation": "Ownership can affect sharing, teams, and automation. Stable IDs and a pre-change snapshot support recovery.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-035",
+    "topic": "Data management",
+    "prompt": "A team wants to restore records after accidental deletion. What should be checked first?",
+    "choices": [
+      "Recycle Bin availability and the scope and limits of undelete",
+      "Whether a recent data export can be imported directly without relationship reconciliation",
+      "Whether re-creating records with matching names preserves their original IDs",
+      "Whether the current report can recover deleted field values automatically"
+    ],
+    "explanation": "Recycle Bin recovery is time- and capability-limited. Assess related records and retain an independent backup strategy.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-036",
+    "topic": "Data management",
+    "prompt": "A required relationship must be populated during a migration. What sequence reduces failures?",
+    "choices": [
+      "Load parent records, obtain their IDs or external IDs, then load children",
+      "Load children first using parent names, then deduplicate the parents",
+      "Load both objects independently and populate required relationships afterward",
+      "Use new Salesforce IDs from a different org as parent references"
+    ],
+    "explanation": "Parent references must resolve when children are loaded. An explicit mapping or supported external-ID relationship avoids name ambiguity.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-037",
+    "topic": "Data management",
+    "prompt": "A team assumes weekly CSV exports include every file and all metadata needed for full recovery. What should the admin explain?",
+    "choices": [
+      "Backup coverage and restore procedures must be verified separately for data, files, and metadata",
+      "A successful export job proves a complete restore is possible",
+      "Metadata recovery is covered whenever all standard objects are exported",
+      "Recycle Bin retention is sufficient for long-term data and configuration recovery"
+    ],
+    "explanation": "A recoverable backup needs defined coverage and tested restore procedures; tabular data alone is not a complete org backup.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "ADM-038",
+    "topic": "Analytics",
+    "prompt": "A user can open a report folder but sees fewer records than an administrator in the same report. Why?",
+    "choices": [
+      "Report results respect the user's object and record access",
+      "The report folder's Viewer access restricts each user to a fixed row count",
+      "A report's creator always determines the data shown to every viewer",
+      "The report type automatically hides rows owned by other roles"
+    ],
+    "explanation": "Folder access permits access to the report asset; it does not override underlying data permissions.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-039",
+    "topic": "Analytics",
+    "prompt": "Executives must see dashboard results according to each viewer's own access. Which approach fits?",
+    "choices": [
+      "A dynamic dashboard, within org feature and limit availability",
+      "A fixed running-user dashboard owned by a broadly privileged executive",
+      "A public dashboard folder with an administrator as running user",
+      "A report filter set to My Records under a shared administrative running user"
+    ],
+    "explanation": "Dynamic dashboards run as the viewing user. A fixed privileged running user can expose broader aggregate results.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-040",
+    "topic": "Analytics",
+    "prompt": "A report needs Accounts even when no related Opportunities exist. What should the report type support?",
+    "choices": [
+      "Accounts with or without Opportunities",
+      "Accounts with Opportunities and a filter for blank Opportunity names",
+      "An Opportunity report with an outer filter on Account fields",
+      "Accounts with Opportunities and cross-filter logic that restores missing parents"
+    ],
+    "explanation": "The relationship definition in the report type controls whether parents without child records are included.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-041",
+    "topic": "Analytics",
+    "prompt": "A manager wants each region's share of the report's grand total. Which tool is most appropriate?",
+    "choices": [
+      "A summary formula using a parent grouping total",
+      "A row-level formula dividing each amount by a hard-coded total",
+      "A report bucket that calculates regional percentages automatically",
+      "A cross-object formula referencing the report's grand total"
+    ],
+    "explanation": "Summary formulas operate on grouped aggregates and can compare them to parent or grand totals.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-042",
+    "topic": "Analytics",
+    "prompt": "A report filter uses AND for all conditions, but the requirement is West region OR strategic Accounts, limited to active customers. What should you configure?",
+    "choices": [
+      "Custom filter logic combining the alternative criteria inside the active-customer requirement",
+      "Set all three conditions to OR so no strategic Account is excluded",
+      "Use West AND strategic AND active to enforce all three criteria",
+      "Put the active filter inside only the West branch of the OR expression"
+    ],
+    "explanation": "Explicit filter logic expresses grouped Boolean conditions; test boundary cases to avoid unintended inclusion.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-043",
+    "topic": "Analytics",
+    "prompt": "A dashboard chart shows stale figures after records change. What should be checked before changing security?",
+    "choices": [
+      "Dashboard refresh status and underlying report filters",
+      "The source report's folder access before checking whether the dashboard is cached",
+      "The running user's role alone, because dashboards always show live data",
+      "The dashboard component title, which determines its refresh frequency"
+    ],
+    "explanation": "Dashboards can display cached results. Refresh behavior and source report selection must be checked before concluding access is wrong.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "ADM-044",
+    "topic": "Automation",
+    "prompt": "A field on the triggering record should be populated efficiently before it is saved. No related records need updates. Which flow fits?",
+    "choices": [
+      "A before-save record-triggered flow",
+      "An after-save flow that saves the same record again for every update",
+      "A scheduled-triggered flow that recalculates all records each hour",
+      "A formula field even when a stored, editable snapshot value is required"
+    ],
+    "explanation": "Before-save flows efficiently change fields on the triggering record without a second DML update.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-045",
+    "topic": "Automation",
+    "prompt": "After an Opportunity closes, a related Account must be updated and a Task created. Which flow timing is appropriate?",
+    "choices": [
+      "An after-save record-triggered flow",
+      "A before-save flow that creates a Task through an immediate record action",
+      "A formula on Account referencing the triggering Opportunity's closed status",
+      "A scheduled flow that scans every Opportunity after each save"
+    ],
+    "explanation": "Actions involving related records or additional records require after-save processing rather than the fast field-update path.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-046",
+    "topic": "Automation",
+    "prompt": "A record-triggered flow updates a field and keeps re-entering automation on later saves. What should be examined first?",
+    "choices": [
+      "Entry conditions, prior values, and whether updates actually need to occur",
+      "Increase the flow's trigger order so recursion is automatically prevented",
+      "Move the same unguarded update to an asynchronous path",
+      "Change every entry condition to always run so state stays synchronized"
+    ],
+    "explanation": "Precise transition checks and idempotent updates avoid repeated or recursive work. The design must consider the wider automation chain.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-047",
+    "topic": "Automation",
+    "prompt": "A bulk import hits limits because a flow queries and updates records inside a loop. What is the best correction?",
+    "choices": [
+      "Collect IDs and records, then query and perform DML outside the loop",
+      "Move only the update outside the loop and keep a query per record",
+      "Split the flow into a subflow called once per loop iteration",
+      "Move the same per-record operations into an asynchronous path without redesign"
+    ],
+    "explanation": "Bulk-safe automation minimizes repeated database operations. Permissions do not raise transaction governor limits.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-048",
+    "topic": "Automation",
+    "prompt": "An approval process locks a submitted expense. A user can view it but cannot edit it. What should be investigated?",
+    "choices": [
+      "Approval locking behavior and who may edit locked records",
+      "The record's page layout read-only settings as the only possible cause",
+      "The user's sharing rule, because approval locks do not affect edit access",
+      "The approval entry criteria alone, without checking the current approval state"
+    ],
+    "explanation": "Approval locks impose an edit constraint distinct from visibility. Review allowed editors and the process state.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-049",
+    "topic": "Automation",
+    "prompt": "An external system occasionally rejects a flow's action. Operations need a useful diagnostic and a controlled recovery route. What should be designed?",
+    "choices": [
+      "Fault paths, safe error logging, and an appropriate retry or escalation process",
+      "Retry every failed action immediately without tracking completed operations",
+      "Write full request headers and credentials into a public error record",
+      "Suppress the failure and let the scheduled job repeat all actions later"
+    ],
+    "explanation": "Fault handling preserves context without exposing secrets. Retries must be bounded and account for duplicate side effects.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-050",
+    "topic": "Automation",
+    "prompt": "An administrator debugs a flow successfully as an admin, but users receive access errors. What is the next investigation?",
+    "choices": [
+      "The flow's execution context and users' effective permissions",
+      "Grant users administrative permissions to match the successful debug run",
+      "Change the flow owner without examining execution context",
+      "Move the flow to a different Lightning page to bypass record access errors"
+    ],
+    "explanation": "Flow behavior depends on context and permissions. An administrator's successful run does not establish least-privilege user readiness.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-051",
+    "topic": "Automation",
+    "prompt": "A scheduled action should occur several days before a renewal date, but that date can change. What needs validation?",
+    "choices": [
+      "Scheduled-path timing, updated dates, and entry/eligibility behavior",
+      "Whether the original schedule should remain unchanged after any renewal-date update",
+      "Only whether the flow was active when the record was created",
+      "Only the invoking user's time zone, without eligibility or update tests"
+    ],
+    "explanation": "Date-relative automation must be tested for changes, cancellation, and eligibility, not only the first scheduled execution.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-052",
+    "topic": "Automation",
+    "prompt": "A team asks for a formula field to send an email when a balance exceeds a limit. What should you recommend?",
+    "choices": [
+      "Use appropriate automation; formulas calculate values and do not send emails",
+      "A formula with an email-template return type",
+      "A roll-up summary that invokes an email alert on evaluation",
+      "A required email field with a calculated default as the notification mechanism"
+    ],
+    "explanation": "Formulas compute values. Sending notifications requires an action through automation with clear triggering conditions.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "ADM-053",
+    "topic": "Productivity & user experience",
+    "prompt": "Users need key fields and actions tailored to a mobile record header. What configuration should be reviewed?",
+    "choices": [
+      "Compact layouts and supported mobile actions",
+      "Only the full page layout, because compact layouts apply exclusively to desktop",
+      "A Lightning record page assignment without checking mobile action support",
+      "A global action layout as the only control over all record highlights"
+    ],
+    "explanation": "Compact layouts influence record highlights, and supported actions determine mobile interactions. Test the actual mobile experience.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "ADM-054",
+    "topic": "Productivity & user experience",
+    "prompt": "A Lightning component should appear only when a record is high priority. Which feature is appropriate?",
+    "choices": [
+      "Component visibility filters on the Lightning record page",
+      "A separate record type for every priority value without visibility filters",
+      "A dynamic dashboard filtered to high-priority records",
+      "A page layout assignment that changes automatically whenever priority changes"
+    ],
+    "explanation": "Visibility filters tailor presentation to conditions. They are not a substitute for securing sensitive data.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "ADM-055",
+    "topic": "Productivity & user experience",
+    "prompt": "Different apps require different Lightning record pages for the same object. What should be configured?",
+    "choices": [
+      "Lightning page activation and relevant app, record type, and profile assignments",
+      "Page layout assignments alone, without Lightning page activation",
+      "A single org-default page with no app-specific activation",
+      "Separate profiles alone, because app activation cannot affect record pages"
+    ],
+    "explanation": "Activation assignments determine which record page appears in a given app and user context.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "ADM-056",
+    "topic": "Productivity & user experience",
+    "prompt": "An admin hides a field using Dynamic Forms visibility. A user still retrieves it through the API. Why?",
+    "choices": [
+      "Presentation visibility does not replace field-level security",
+      "Dynamic Forms filters require a new sharing calculation before they affect APIs",
+      "The API uses page layout visibility instead of field-level security",
+      "A record type assignment will enforce the same condition on API responses"
+    ],
+    "explanation": "Conditional UI visibility is presentation logic. Field-level security must enforce data confidentiality.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "ADM-057",
+    "topic": "Productivity & user experience",
+    "prompt": "A team wants reusable email text while preserving personalization. What should be considered?",
+    "choices": [
+      "Email templates with appropriate merge fields and access",
+      "Copy a prior customer email and manually replace names for every recipient",
+      "Use one fixed email body with no merge context to eliminate permission concerns",
+      "Grant all users access to every template folder to ensure personalization works"
+    ],
+    "explanation": "Templates support consistency and merge data. Validate merge context and access before broad use.",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "ADM-058",
+    "topic": "Operational judgment",
+    "prompt": "A new automation works in a sandbox. What is the strongest next step before production deployment?",
+    "choices": [
+      "Test representative personas, bulk operations, negative paths, and deployment dependencies",
+      "Test a single successful record as admin and deploy using identical settings",
+      "Deploy only the flow without checking referenced fields or permissions",
+      "Perform bulk testing only after activation in production"
+    ],
+    "explanation": "Production readiness requires realistic permissions, transaction volumes, failure behavior, and dependency coverage.",
+    "reference": "https://trailhead.salesforce.com/en/credentials/administrator"
+  },
+  {
+    "id": "ADM-059",
+    "topic": "Operational judgment",
+    "prompt": "A request would grant all support staff Modify All Data to resolve one access issue. What should the administrator do first?",
+    "choices": [
+      "Diagnose object, field, and record access and apply the narrowest sufficient grant",
+      "Grant Modify All on the object before diagnosing the missing access layer",
+      "Place support above every record owner in the role hierarchy",
+      "Make the object Public Read Write and hide sensitive fields in layouts"
+    ],
+    "explanation": "Resolve the actual access layer. Broad administrative permissions bypass controls far beyond a single business requirement.",
+    "reference": "https://trailhead.salesforce.com/en/credentials/administrator"
+  },
+  {
+    "id": "ADM-060",
+    "topic": "Operational judgment",
+    "prompt": "A release changes a standard feature used in critical automation. What is the best preparation?",
+    "choices": [
+      "Review official release notes and test affected workflows in an appropriate preview or sandbox environment",
+      "Read release notes without testing the org's affected automation",
+      "Test only custom code because standard flows are insulated from release changes",
+      "Wait for production failures before reviewing the feature's new behavior"
+    ],
+    "explanation": "Release readiness connects documented changes with regression tests of actual dependencies.",
+    "reference": "https://trailhead.salesforce.com/en/credentials/administrator"
+  }
+]
