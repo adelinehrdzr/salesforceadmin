@@ -30,6 +30,23 @@ class PracticeTests(unittest.TestCase):
             self.assertEqual(len(set(q['choices'])),4)
             self.assertGreater(len(q['explanation']),70)
             self.assertTrue(q['reference'].startswith('https://trailhead.salesforce.com/'))
+    def test_course_materials_and_assessment_coverage(self):
+        modules=json.load(self.get('/course.json'))
+        bank=json.loads(Path(__file__).with_name('data').joinpath('questions.json').read_text())
+        self.assertEqual(len(modules),9)
+        self.assertEqual(len({m['id'] for m in modules}),9)
+        self.assertEqual({m['topic'] for m in modules},{q['topic'] for q in bank})
+        lesson_ids=[]
+        for module in modules:
+            self.assertEqual(len(module['lessons']),3)
+            self.assertGreaterEqual(len(module['lab']),4)
+            self.assertTrue(any(q['topic']==module['topic'] for q in bank))
+            for lesson in module['lessons']:
+                lesson_ids.append(lesson['id'])
+                self.assertGreaterEqual(len(lesson['paragraphs']),3)
+                self.assertGreater(len(' '.join(lesson['paragraphs']).split()),100)
+        self.assertEqual(len(set(lesson_ids)),27)
+
     def test_no_answer_leak_and_shuffled_options(self):
         runs=[json.load(self.get('/api/questions')) for _ in range(8)]
         for q in runs[0]:
@@ -48,7 +65,7 @@ class PracticeTests(unittest.TestCase):
         bank=json.load(self.get('/api/questions'))
         result=self.grade({'ids':[q['id'] for q in bank],'answers':{q['id']:0 for q in bank}})
         self.assertEqual(sum(r['correct'] for r in result['results']),60)
-        for path in ['/','/app.js','/style.css']:
+        for path in ['/','/app.js','/course.js','/course.json','/style.css']:
             self.assertEqual(self.get(path).status,200)
 
 if __name__=='__main__':unittest.main()

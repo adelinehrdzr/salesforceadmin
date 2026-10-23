@@ -1,0 +1,380 @@
+[
+  {
+    "id": "security",
+    "topic": "Security & access",
+    "title": "Design access without over-sharing",
+    "lessons": [
+      {
+        "id": "security-1",
+        "title": "Separate the three access layers",
+        "paragraphs": [
+          "Object permissions answer whether a user can work with an object at all. Field-level security answers which fields the user can read or edit. Record access answers which individual records the user can reach. A user must satisfy the relevant layers together. Adding a field to a layout cannot repair missing field permission; sharing a record cannot create object permission.",
+          "Start with a minimal profile, then grant job-specific capabilities using permission sets and permission set groups. Grants are generally additive. A muting permission set changes the grants from its group only; it does not cancel a grant from another permission set or the profile.",
+          "A sales specialist can read Accounts but cannot see Margin. Compare effective field access before changing sharing. If the specialist sees Margin on some pages but cannot edit it, inspect both field edit access and the page configuration. Never diagnose an access problem using only an administrator account."
+        ]
+      },
+      {
+        "id": "security-2",
+        "title": "Choose record access deliberately",
+        "paragraphs": [
+          "Organization-wide defaults establish baseline record access. Private is useful when record access should expand through controlled grants. The role hierarchy, sharing rules, teams, and manual sharing can expand access. A role models an access relationship, not necessarily a job title or an exact organization chart.",
+          "Use criteria-based sharing when a stable record attribute identifies a broad audience. Use teams for collaboration on selected Accounts or Opportunities. Manual sharing can fit a small exception but needs an owner and cleanup process. For custom objects, evaluate whether Grant Access Using Hierarchies should be enabled; standard objects do not offer the same switch.",
+          "Ten Accounts need temporary contractor access but have no common business attribute. A broad regional rule grants too much. Choose targeted access and document its removal date. Removing a manual share does not remove access supplied by another rule or team."
+        ]
+      },
+      {
+        "id": "security-3",
+        "title": "Validate least privilege",
+        "paragraphs": [
+          "View All and Modify All at object level bypass normal sharing for that object. View All Data and Modify All Data have broader scope. These are powerful administrative capabilities, not routine fixes for an unexplained visibility issue.",
+          "Use a dedicated integration identity with only the objects and fields needed for the integration. App navigation, tabs, layouts, and component visibility organize the user experience; they are not comprehensive data security controls. Restrict the underlying permissions when data must also be protected in reports and APIs.",
+          "Create a positive and negative test for every permission change: the intended user can do the required task, while a comparison user cannot access unrelated data. Record every source of a grant before removing one so you can explain why access remains."
+        ]
+      }
+    ],
+    "lab": [
+      "In a practice org, create two sample Accounts and a custom sensitive field. Do not use real customer data.",
+      "Create a permission set granting access to the sensitive field; compare users with and without it.",
+      "Review Account OWD and identify existing access paths before attempting a targeted share. Avoid disruptive org-wide changes in a shared org.",
+      "Test record and field visibility as a nonadministrator. Capture one allowed and one denied outcome."
+    ],
+    "reflection": "Why does hiding a field on a page not protect it from API access? Which grant would you remove if access exists through both a team and a rule?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_security"
+  },
+  {
+    "id": "model",
+    "topic": "Object model & configuration",
+    "title": "Build a maintainable data model",
+    "lessons": [
+      {
+        "id": "model-1",
+        "title": "Model records and relationships",
+        "paragraphs": [
+          "An object defines a kind of business entity; a field stores an attribute; a record represents one instance. Model the business facts before building the interface. Use standard objects when their behavior matches the process, and use custom objects when a distinct entity needs its own lifecycle.",
+          "A lookup links records that can generally remain independently owned and shared. Requiredness and parent deletion behavior need explicit design. Master-detail creates a dependent child that inherits ownership and sharing from its master, supports roll-up summaries, and is affected by master deletion. Review conversion and reparenting constraints before choosing it.",
+          "Invoice Lines that must always belong to an Invoice and contribute to its total fit master-detail. A historical association that must survive parent removal may fit a lookup with carefully selected deletion behavior. A junction object stores many-to-many associations and fields about each association."
+        ]
+      },
+      {
+        "id": "model-2",
+        "title": "Separate process variation from permissions",
+        "paragraphs": [
+          "Record types can support different business processes, available picklist values, and page layout assignments. For Opportunities, sales processes select stages; record types connect that process to the relevant experience. Record types do not replace sharing or field-level security.",
+          "A page layout controls aspects of record editing and presentation. A Lightning record page controls component arrangement and activation context. These configurations work together but solve different problems. A layout-required field enforces a UI requirement; a validation rule is appropriate for many conditional save requirements across UI and API operations.",
+          "A renewal process needs different stages from new business. Define the sales processes and record types rather than copying the Opportunity object. Test as a user assigned each record type, including an API save that should fail a conditional validation."
+        ]
+      },
+      {
+        "id": "model-3",
+        "title": "Distinguish calculated values from stored values",
+        "paragraphs": [
+          "A formula calculates a current result from inputs. It is useful when a value should reflect the current related information without synchronization. A copied field is appropriate when the requirement is a historical snapshot, but then the capture event and later changes must be specified.",
+          "A roll-up summary aggregates qualifying detail records on the master in supported relationships. A normal formula cannot query arbitrary child records and sum them. Cross-object formulas can reveal information derived from related fields; review the security of the formula itself instead of assuming source field visibility is sufficient.",
+          "Picklist labels are user-facing; API values can be integration contracts. A wording change should not casually rename an integration value. Before changing a field or relationship, inventory formulas, automation, reports, and integrations that depend on it."
+        ]
+      }
+    ],
+    "lab": [
+      "Create Invoice and Invoice Line custom objects in a Playground and choose a master-detail relationship.",
+      "Add a currency Amount to the line and a SUM roll-up to Invoice. Create two lines and verify the total changes after an edit.",
+      "Create a conditional validation rule with a clear error message. Test both a valid and an invalid save.",
+      "Write down what would happen to lines if the master were deleted. Inspect supported deletion behavior before testing with disposable records."
+    ],
+    "reflection": "When would a copied value be more correct than a formula? Why do record types not guarantee data confidentiality?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/data_modeling"
+  },
+  {
+    "id": "sales",
+    "topic": "Sales & marketing",
+    "title": "Understand the revenue lifecycle",
+    "lessons": [
+      {
+        "id": "sales-1",
+        "title": "Follow a Lead through qualification",
+        "paragraphs": [
+          "A Lead represents a prospect before qualification. An Account represents an organization or customer relationship, and a Contact represents a person. Qualification determines whether the Lead should be converted into the appropriate Account and Contact, and optionally an Opportunity.",
+          "Conversion can use existing Accounts and Contacts where appropriate; creating a new Account every time fragments customer history. Review Lead field mappings, matching rules, duplicate behavior, and required fields. Test both a new customer and a new person at an existing customer.",
+          "Assignment rules route eligible incoming Leads based on ordered criteria. The save or import operation must invoke the applicable rule. An active rule alone does not guarantee that every creation method runs it. Inspect the import settings and matched entry before redesigning ownership."
+        ]
+      },
+      {
+        "id": "sales-2",
+        "title": "Connect deals, products, and forecasts",
+        "paragraphs": [
+          "An Opportunity represents a potential transaction. Stage communicates progress through a sales process. Probability and forecast categories influence planning but are not substitutes for clear stage exit criteria. Distinguish the requested sales behavior from its reporting consequences.",
+          "Products describe what is sold. Price books define offered prices, and Opportunity products capture quantities and deal-specific amounts. Design currency and pricing assumptions deliberately. Quotes serve a related quoting workflow; they do not make product and price book configuration unnecessary.",
+          "If renewal and new-business stages differ, use sales processes and record types. If forecast totals look wrong, inspect stage-to-category mapping, ownership, close dates, filters, and forecasting configuration rather than changing stages at random."
+        ]
+      },
+      {
+        "id": "sales-3",
+        "title": "Measure campaign participation and pipeline",
+        "paragraphs": [
+          "A Campaign represents a marketing initiative. Campaign members connect Leads or Contacts to it. Member statuses such as Invited, Attended, and No Show describe participation. Configure which statuses count as responses so response metrics match the business meaning.",
+          "Lead status, Campaign member status, and Opportunity stage are distinct lifecycle concepts. Do not reuse one as a shortcut for another. Campaign influence and attribution require an explicit model; membership alone does not establish that a campaign caused a sale.",
+          "Use Opportunity reports grouped by owner and stage to inspect pipeline. Validate the data from a sales user perspective, because a report and its dashboard can present different visibility depending on running-user configuration. Reconcile totals with a small set of known deals first."
+        ]
+      }
+    ],
+    "lab": [
+      "Create a sample Account, then a Lead for a new Contact at that Account. Convert without creating a duplicate Account.",
+      "Inspect the Opportunity stage process and its forecast category mappings. Create a disposable deal with a realistic close date.",
+      "If products are available, add an active product and the appropriate price book entry, then add an Opportunity line item.",
+      "Create a Campaign with sample member statuses and check which count as responses."
+    ],
+    "reflection": "What makes a Lead conversion different from creating a Contact directly? Why might an import ignore an otherwise correct assignment rule?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/leads_opportunities_lightning_experience"
+  },
+  {
+    "id": "service",
+    "topic": "Service & support",
+    "title": "Route and resolve customer work",
+    "lessons": [
+      {
+        "id": "service-1",
+        "title": "Distinguish routing, acknowledgment, and escalation",
+        "paragraphs": [
+          "A Case is a unit of customer support work. Status tracks progress; ownership identifies who is responsible. A queue is a way to pool supported records for a team before an individual takes responsibility. Define intake criteria and ownership before building notifications.",
+          "Case assignment rules route incoming Cases according to ordered criteria. Auto-response rules send initial acknowledgments. Escalation rules act on eligible Cases after an age threshold, potentially reassigning or notifying. These mechanisms have different triggers and purposes; an acknowledgment is not a routing decision.",
+          "A hardware Case should go to a product queue, receive an appropriate acknowledgment, and notify a manager if it remains unresolved past a business-hours interval. Design three clear responsibilities rather than expecting one rule to perform every part of the lifecycle."
+        ]
+      },
+      {
+        "id": "service-2",
+        "title": "Design time and process behavior",
+        "paragraphs": [
+          "Business hours and holidays affect how relevant service timers are calculated. A four-hour requirement needs an explicit definition: calendar hours or supported working hours? Identify the intended time zone and which Cases use which business hours.",
+          "Support processes define available Case statuses and can be connected through record types. A screen flow can guide an agent through structured intake. A record-triggered flow runs from record events and does not provide an interactive wizard. Choose the flow type based on who initiates the work and whether input screens are needed.",
+          "Escalation and milestone-style service commitments are related but not interchangeable. Evaluate whether simple age-based escalation meets the requirement before introducing a more complex entitlement design. Test edge cases near closing time and holidays."
+        ]
+      },
+      {
+        "id": "service-3",
+        "title": "Publish knowledge responsibly",
+        "paragraphs": [
+          "Knowledge articles help agents and customers reuse approved solutions. Authoring, review, publication, and audience exposure are separate concerns. An article being published does not by itself prove that the intended external audience can see it.",
+          "Review publication state, channel visibility, user access, and relevant category or audience configuration. Product editions and enabled features affect available capabilities. Test as an external audience when the requirement is external access; an administrator seeing the article proves little.",
+          "Keep confidential troubleshooting details out of publicly exposed content. When attaching knowledge to a Case or presenting it in an agent experience, verify both findability and access. Maintain an owner and review cycle so outdated guidance does not become the default answer."
+        ]
+      }
+    ],
+    "lab": [
+      "Create a product support queue and sample Cases with clear status and priority values.",
+      "Inspect assignment, auto-response, and escalation settings; document the separate purpose of each. Use test-only notification addresses.",
+      "Define a business-hours boundary scenario and predict when an escalation should qualify.",
+      "If Knowledge is available, inspect a draft article and list the controls needed for internal versus external visibility. Otherwise document the intended design."
+    ],
+    "reflection": "Which rule routes a new Case, which acknowledges it, and which addresses elapsed time? Why is publication alone insufficient for external article access?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/service_basics"
+  },
+  {
+    "id": "data",
+    "topic": "Data management",
+    "title": "Import safely and plan recovery",
+    "lessons": [
+      {
+        "id": "data-1",
+        "title": "Identify records before changing them",
+        "paragraphs": [
+          "Salesforce record IDs identify records inside an org. An external ID represents an identity from a source system and can support repeatable matching. A customer name is usually a poor integration key because names can change or repeat.",
+          "Insert creates records, Update changes existing records, and Upsert uses a specified identifier to update a match or insert when no match exists. Choose a unique, governed source key when the business requires stable identity. Confirm the selected operation rather than assuming that having an external ID field automatically enables upsert.",
+          "Load parent records before children that require them. Preserve source-to-target ID mappings or use supported external-ID relationship mapping. IDs from another org do not identify equivalent records here. Rehearse a small parent-child batch before a large migration."
+        ]
+      },
+      {
+        "id": "data-2",
+        "title": "Prevent duplicates and reconcile partial results",
+        "paragraphs": [
+          "Matching rules describe how potential duplicates are identified. Duplicate rules decide how to respond, such as warning or blocking for applicable operations. A matching rule alone does not define the full user or import outcome.",
+          "Bulk operations can partially succeed. Preserve success and error outputs with stable keys, identify the failed records, correct the cause, and retry only what is appropriate. Repeating an entire Insert operation can create duplicates; repeating an update can trigger automation again even when business data looks unchanged.",
+          "Before mass owner changes or other broad updates, export IDs and prior values, review sharing and automation impacts, and define rollback. A successful job status is not enough: reconcile record counts, representative field values, relationships, and unexpected side effects."
+        ]
+      },
+      {
+        "id": "data-3",
+        "title": "Treat backup and restore as separate capabilities",
+        "paragraphs": [
+          "A backup plan defines what is captured, how often, where it is stored, who can access it, and how it can be restored. Data, files, and metadata have different recovery needs. A collection of CSVs is not automatically a complete recoverable org.",
+          "The Recycle Bin supports some deletion recovery within platform limits and retention behavior. It does not replace independent backups, and recreating a record is not the same as restoring its original ID and relationships. Evaluate related-record effects and verify current recovery capabilities.",
+          "Prove a recovery procedure with disposable data in a suitable nonproduction org. Record how relationships are rebuilt and how partial failures are detected. Protect exported customer data; a backup can be sensitive even when it is outside Salesforce."
+        ]
+      }
+    ],
+    "lab": [
+      "Prepare five synthetic Accounts with a unique external key and import them using a supported tool. Save the mapping and result output.",
+      "Change two source rows and upsert again. Verify that existing records update without doubling the count.",
+      "Introduce one invalid row, inspect partial results, and retry only the corrected failure using the appropriate operation.",
+      "Write a rollback plan with prior values and stable IDs; separately list how you would back up metadata and files."
+    ],
+    "reflection": "Why is Upsert safer than Insert for a repeatable sync only when identity is governed? How would you prove a backup is restorable?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management"
+  },
+  {
+    "id": "analytics",
+    "topic": "Analytics",
+    "title": "Build reports people can trust",
+    "lessons": [
+      {
+        "id": "analytics-1",
+        "title": "Choose the population before the chart",
+        "paragraphs": [
+          "A report type defines the objects, relationships, and available fields for a report. Its relationship definition affects which records can exist in the result. Accounts with Opportunities excludes Accounts with no Opportunities; Accounts with or without Opportunities can include them.",
+          "Filters select records from that population. Custom filter logic combines conditions using explicit Boolean grouping. Write the business statement first: active customers AND (West region OR strategic). Test one example in each inclusion and exclusion category so precedence mistakes are visible.",
+          "Report folder access lets a user reach the report asset; it does not grant all underlying records or fields. Two users opening the same report can get different results because of their effective data access. Validate as a representative consumer, not only the report author."
+        ]
+      },
+      {
+        "id": "analytics-2",
+        "title": "Use the right calculation level",
+        "paragraphs": [
+          "A row-level calculation operates on an individual result record. A summary calculation operates on grouped aggregates. If the requirement is a region percentage of the grand total, start with group summaries and the appropriate parent total rather than copying a fixed total into a row formula.",
+          "Group by the dimensions relevant to the decision, such as owner and stage for pipeline. Distinguish totals over records from distinct customer counts, and check whether report relationships can create multiple rows per parent. Use a small known data set to reconcile the calculation.",
+          "A bucket can group values for analysis but is not a general replacement for data cleanup or a maintained source field. Choose report-local convenience only when the grouping does not need to govern automation or integrations elsewhere."
+        ]
+      },
+      {
+        "id": "analytics-3",
+        "title": "Explain dashboard visibility and freshness",
+        "paragraphs": [
+          "A fixed running-user dashboard can display data according to that running user. A dynamic dashboard runs according to the viewing user where the org supports it. Decide whether the requirement is a shared executive aggregate or each viewer seeing only their own permitted scope.",
+          "A public folder does not make a privileged running user safe. Assess what aggregate information will be exposed. Check current edition support and limits before designing around dynamic dashboards.",
+          "Charts may show cached data. If a number seems wrong, inspect refresh status, the source report, filters, and the running-user context before altering permissions. Compare against a few known records and document the time basis, such as created date versus close date."
+        ]
+      }
+    ],
+    "lab": [
+      "Create sample Accounts with and without Opportunities. Compare report populations using available report types.",
+      "Build an Opportunity report grouped by owner and stage and reconcile a known subtotal.",
+      "Add a dashboard component and inspect its running-user settings. Compare with the intended viewer where permitted.",
+      "Test the filter active AND (West OR strategic) against four synthetic examples and write the expected inclusions."
+    ],
+    "reflection": "Why can two users get different rows from the same shared report? What must be true before a dashboard is safe for its intended audience?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards"
+  },
+  {
+    "id": "automation",
+    "topic": "Automation",
+    "title": "Build predictable flows",
+    "lessons": [
+      {
+        "id": "automation-1",
+        "title": "Select the correct flow type and timing",
+        "paragraphs": [
+          "A screen flow collects interactive input. A record-triggered flow responds to record changes. A scheduled-triggered flow processes eligible records on a schedule. Choosing the flow type begins with the event and whether a human must provide information during execution.",
+          "A before-save record-triggered flow is appropriate for efficient field changes on the triggering record. After-save processing supports work such as creating a Task or updating a related Account. Do not perform a second save of the same record when a before-save field update meets the requirement.",
+          "Write entry conditions as a business transition. Closing an Opportunity should not necessarily create another Task every time someone later edits its description. Compare current and prior state and make repeated execution safe when appropriate."
+        ]
+      },
+      {
+        "id": "automation-2",
+        "title": "Design for bulk work and failure",
+        "paragraphs": [
+          "A flow that works for one record can fail during an import. Repeated queries or data updates inside loops can exhaust transaction limits. Collect IDs or records and perform database work outside the loop where the design allows.",
+          "A subflow called once per iteration does not automatically eliminate repeated database operations. Moving the same design to an asynchronous path also does not remove the need to understand limits and transaction behavior. Test realistic volumes and the broader automation chain.",
+          "Use fault paths and safe diagnostics. Avoid logging secrets or complete sensitive payloads. A retry policy must account for side effects: if the external system processed a request but its response was lost, an unguarded retry can create a duplicate. Define escalation for failures that cannot be repaired automatically."
+        ]
+      },
+      {
+        "id": "automation-3",
+        "title": "Validate context, scheduled work, and approvals",
+        "paragraphs": [
+          "Execution context affects which permissions and sharing apply. An administrator debug run is not a user acceptance test. Read the configuration for the specific flow type and context, then test the intended user personas and required records.",
+          "Date-relative scheduled paths need tests for changed dates, changed eligibility, cancellation, and rescheduling. A successful initial schedule does not prove later edits behave correctly. Define whether the desired behavior is one action per record or one action per qualifying transition.",
+          "Approval processes can lock records. A user who can view a record may still be unable to edit it because of approval state. Formulas calculate values; they do not directly send emails or create records. Select an action-capable automation mechanism for those effects and confirm its entry conditions."
+        ]
+      }
+    ],
+    "lab": [
+      "Build a before-save flow on disposable practice data that populates a field only when its source changes.",
+      "Build a separate after-save flow that creates one Task for a defined transition. Edit an unrelated field and confirm no duplicate Task appears.",
+      "Test multiple records and inspect for database operations inside loops. Exercise an invalid or inaccessible record case.",
+      "Record execution context and one fault-handling plan. If using scheduled paths, test a changed date and loss of eligibility."
+    ],
+    "reflection": "Why can after-save updates accidentally repeat work? How would your design recover if an external action succeeded but the response timed out?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/flow-basics"
+  },
+  {
+    "id": "experience",
+    "topic": "Productivity & user experience",
+    "title": "Make the right work easy to find",
+    "lessons": [
+      {
+        "id": "experience-1",
+        "title": "Distinguish the experience configuration layers",
+        "paragraphs": [
+          "An app groups navigation and experiences for a job. A Lightning record page arranges components. A page layout influences fields, related lists, and actions in supported contexts. A compact layout influences key record highlights. These layers are related but not interchangeable.",
+          "Lightning page activation can select experiences by applicable app, record type, and profile combinations. A page that looks correct in the builder may not be active for the actual user context. Verify the assignment before rebuilding the page.",
+          "If a user can open a record from a list but cannot find its object in an app menu, first inspect navigation. Adding the object to navigation does not grant object permission; hiding it does not revoke access through other routes."
+        ]
+      },
+      {
+        "id": "experience-2",
+        "title": "Use conditional presentation without confusing security",
+        "paragraphs": [
+          "Component visibility filters and Dynamic Forms can reduce clutter and surface information when relevant. A high-priority Case can show extra guidance only when needed. These are presentation decisions, not a comprehensive enforcement boundary.",
+          "Field-level security protects field access across supported interfaces. Conditional visibility alone does not prevent a user from retrieving the value through an API, report, or another page they can use. Separate the requirement to simplify a screen from the requirement to prevent disclosure.",
+          "Test the page with representative record types, field values, users, and form factors. Make sure a hidden section does not remove the only practical way to complete a required task. Clear field labels and validation messages often improve usability more than another conditional component."
+        ]
+      },
+      {
+        "id": "experience-3",
+        "title": "Support mobile work and consistent communication",
+        "paragraphs": [
+          "Mobile users need a concise set of highlights and actions. Review compact layouts, action availability, page behavior, and supported mobile features. Do not assume that a desktop design renders identically or supports every interaction on a smaller screen.",
+          "Email templates can standardize language while using merge fields for context. Confirm the recipient and related-record context, field accessibility, and template access. Preview with synthetic records so personal or confidential details are not sent to the wrong audience.",
+          "Usability validation should follow a real task: find a customer, review its key information, perform the relevant action, and confirm the outcome. Avoid granting extra permissions just to make navigation easier; solve navigation and access at their own layers."
+        ]
+      }
+    ],
+    "lab": [
+      "Create or inspect an app for a defined persona and verify its navigation contains the objects needed for one task.",
+      "Inspect the active Lightning record page and identify which settings belong to its layout versus the compact layout.",
+      "Add a conditional component in a practice page and verify its appearance on two records with different values.",
+      "Document a mobile task and preview a template with synthetic merge data. Confirm that sensitive field protection is enforced separately."
+    ],
+    "reflection": "Which settings change presentation and which enforce confidentiality? How would you diagnose a correct page that does not appear for the intended user?",
+    "reference": "https://trailhead.salesforce.com/content/learn/modules/lex_customization"
+  },
+  {
+    "id": "operations",
+    "topic": "Operational judgment",
+    "title": "Work like a responsible administrator",
+    "lessons": [
+      {
+        "id": "operations-1",
+        "title": "Translate a request into acceptance criteria",
+        "paragraphs": [
+          "A request such as give Support full access is an implementation suggestion, not a complete requirement. Ask which task is blocked, which records it involves, which fields are needed, and whether the user must view, edit, create, or delete.",
+          "Write positive and negative acceptance criteria. The support user can update the required Case fields, while an unrelated user cannot see confidential data. Choose the narrowest sufficient change and name how you will verify it.",
+          "Before building, inspect existing configuration. Another permission set, flow, validation rule, or managed component may already affect the process. An additional automation layer can create conflicting behavior rather than fixing the original cause."
+        ]
+      },
+      {
+        "id": "operations-2",
+        "title": "Test and deploy a complete change",
+        "paragraphs": [
+          "Use an appropriate sandbox or practice environment before production. Identify dependencies such as fields, record types, templates, permission sets, and referenced flows. A flow deployed without its dependencies or user permissions may exist but remain unusable.",
+          "Test intended personas, bulk input, invalid data, and repeat execution. Capture outcomes rather than only screenshots of active configuration. Define who accepts the result, how the change will be deployed, and how a failure will be contained or rolled back.",
+          "After deployment, verify activation, assignments, data access, and a representative transaction in the intended context. Watch for unexpected errors and provide users with concise instructions. Do not use production customer data as disposable test material."
+        ]
+      },
+      {
+        "id": "operations-3",
+        "title": "Maintain readiness across releases and certification changes",
+        "paragraphs": [
+          "Salesforce releases can change feature behavior, limits, and available settings. Follow official release notes, identify features used by the org, and test affected workflows in the appropriate release-preview or sandbox environment when available.",
+          "For certification preparation, verify the current official exam guide rather than treating this course as the authority for domain weights, duration, or passing requirements. The course groups practical skills for learning; it is not a verified 2026 blueprint.",
+          "A strong result on repeated questions can reflect memory rather than transfer. Explain the reasoning without seeing the options, reproduce a task in an org, and solve a changed scenario. Use course assessments to locate gaps; use fresh legitimate material and hands-on evidence to judge readiness."
+        ]
+      }
+    ],
+    "lab": [
+      "Take one earlier lab and write a change request, least-privilege acceptance criteria, and a dependency list.",
+      "Define one positive, one negative, one bulk, and one repeated-operation test. Record the actual outcomes.",
+      "Write rollback and post-deployment checks for the change. Identify who should review it before production.",
+      "Consult the official Administrator credential page and current release notes when accessible; note any differences from your study assumptions."
+    ],
+    "reflection": "What evidence would convince you that a change is ready for production? How can you distinguish memorizing an answer from understanding the underlying decision?",
+    "reference": "https://trailhead.salesforce.com/en/credentials/administrator"
+  }
+]
